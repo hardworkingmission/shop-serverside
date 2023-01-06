@@ -25,6 +25,7 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const userInfo = req?.body;
+  console.log(userInfo)
   try {
     const user = await User.findOne({ username: userInfo?.username });
     if (!user) {
