@@ -72,7 +72,7 @@ const makeAdmin = async(req, res)=>{
     const emailExists = await User.findOne({email}).exec();
     if(!emailExists) return res.status(404).json("Email not exists");
 
-    const result = await User.findOneAndUpdate({email}, {isAdmin: true});
+    const result = await User.findOneAndUpdate({email}, {isAdmin: false}, {new: true});
     return res.status(200).json(result);
 
   } catch (error) {
