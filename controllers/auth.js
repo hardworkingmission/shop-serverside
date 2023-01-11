@@ -62,10 +62,23 @@ const resetPassword = async(req, res)=>{
     const result = await User.findOneAndUpdate({email}, {password: encryptedPass});
     return res.status(200).json(result);
   }catch(err){
-    return res.status(500);
+    return res.status(500).json(err.message);
   }
-
-
 }
 
-module.exports = { getAllUsers, registerUser, loginUser, resetPassword };
+const makeAdmin = async(req, res)=>{
+  try {
+    const email = req.body.email;
+    const emailExists = await User.findOne({email}).exec();
+    if(!emailExists) return res.status(404).json("Email not exists");
+
+    const result = await User.findOneAndUpdate({email}, {isAdmin: true});
+    return res.status(200).json(result);
+
+  } catch (error) {
+    return res.status(500).json(err.message);
+    
+  }
+}
+
+module.exports = { getAllUsers, registerUser, loginUser, resetPassword, makeAdmin };
