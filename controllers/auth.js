@@ -86,6 +86,7 @@ const emailCheck = async(req, res)=>{
     const email = req.body.email;
     const emailExists = await User.findOne({email}).exec();
     if(!emailExists) return res.status(404).json({result: false, message: "Email not exists"});
+    return res.status(200).json({result: true, message: "Email exists"});
 
   } catch (error) {
     return res.status(500).json(err.message);
