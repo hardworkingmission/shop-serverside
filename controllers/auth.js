@@ -50,7 +50,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-const resetPasswprd = async(req, res)=>{
+const resetPassword = async(req, res)=>{
   try{
     const {email, newPassword} = req.body;
     const emailExists = await User.findOne({email}).exec();
@@ -68,4 +68,4 @@ const resetPasswprd = async(req, res)=>{
 
 }
 
-module.exports = { getAllUsers, registerUser, loginUser, resetPasswprd };
+module.exports = { getAllUsers, registerUser, loginUser, resetPassword };
