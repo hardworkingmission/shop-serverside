@@ -81,4 +81,16 @@ const makeAdmin = async(req, res)=>{
   }
 }
 
-module.exports = { getAllUsers, registerUser, loginUser, resetPassword, makeAdmin };
+const emailCheck = async(req, res)=>{
+  try {
+    const email = req.body.email;
+    const emailExists = await User.findOne({email}).exec();
+    if(!emailExists) return res.status(404).json({result: false, message: "Email not exists"});
+
+  } catch (error) {
+    return res.status(500).json(err.message);
+    
+  }
+}
+
+module.exports = { getAllUsers, registerUser, loginUser, resetPassword, makeAdmin, emailCheck };
