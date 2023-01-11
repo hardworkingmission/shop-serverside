@@ -50,4 +50,22 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, registerUser, loginUser };
+const resetPasswprd = async(req, res)=>{
+  try{
+    const {email, newPassword} = req.body;
+    const emailExists = await User.findOne({email}).exec();
+    if(!emailExists) return res.status(404).json("Email not exists");
+    const encryptedPass = cryptoJS.AES.encrypt(
+      newPassword,
+      process.env.PASSWORD_SECRETE
+    ).toString();
+    const result = await User.findOneAndUpdate({email}, {password: encryptedPass});
+    return res.status(200).json(result);
+  }catch(err){
+    return res.status(500);
+  }
+
+
+}
+
+module.exports = { getAllUsers, registerUser, loginUser, resetPasswprd };
