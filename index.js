@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const { connectdb } = require('./connectdb/connectdb');
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8000;
 const auth = require('./routes/auth');
 const user = require('./routes/user');
 const products = require('./routes/product');
@@ -36,4 +36,4 @@ app.listen(port, () => {
   console.log('Listening on', port);
 });
 
-
+module.exports = app;
