@@ -3,8 +3,14 @@ const { Cart } = require('../models/Cart');
 //all carts
 const allCarts = async (req, res) => {
   try {
+    const userId = req.user.id;
     const result = await Cart.find({});
-    res.status(400).json(result);
+    const sortedResult = result.map(item=>{
+      if(item.userId == userId){
+        return item
+      }
+    })
+    res.status(200).json(sortedResult);
   } catch (err) {
     res.status(500).json(err?.message);
   }
@@ -25,8 +31,32 @@ const singleCart = async (req, res) => {
 const createCart = async (req, res) => {
   try {
     const cartInfo = req?.body;
-    const result = await Cart.create(cartInfo);
-    res.status(200).json(result);
+    const userId = req.user.id;
+    const cartExist = await Cart.findOne({userId});
+    if(cartExist){
+      const productExist = await Cart.find({$and:[{userId}, {"products.productId": cartInfo.productId}]});
+      if(productExist.length>0){
+        const result = productExist[0].products.map(product=>{
+          if(product.productId == cartInfo.productId){
+            product.quantity += cartInfo.quantity;
+          }
+          return product;
+        }).filter(product=>product.productId==cartInfo.productId);
+        
+        const deResult = await Cart.findOne({userId, "products.productId": cartInfo.productId});
+        deResult.products.filter(product => product.productId == cartInfo.productId)[0].quantity = result[0].quantity;
+        deResult.save()
+        return res.status(200).json(deResult);
+        
+      }else{
+        cartExist.products.push(cartInfo);
+        const result = await Cart.updateOne({userId}, cartExist);
+        return res.status(200).json(result);
+      }
+
+    }
+    const result = await Cart.create({userId, products:cartInfo});
+    return res.status(200).json(result);
   } catch (err) {
     res.status(500).json(err?.message);
   }

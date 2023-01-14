@@ -28,9 +28,8 @@ const allProducts = async (req, res) => {
 const singleProduct = async (req, res) => {
   try {
     const productId = req.params?.id;
-    //console.log(productId);
     const result = await Product.findById(productId);
-    res.status(400).json(result);
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json(err?.message);
   }

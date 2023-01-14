@@ -16,7 +16,7 @@ const router = express.Router();
 router
   .route('/')
   .post(verifyToken, createCart)
-  .get(verifyTokenAndAdmin, allCarts);
+  .get(verifyToken, allCarts);
 router
   .route('/:id')
   .get(verifyTokenAndAuthorization, singleCart)
