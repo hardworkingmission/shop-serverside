@@ -1,3 +1,4 @@
+const { trusted } = require('mongoose');
 const { Cart } = require('../models/Cart');
 
 //all carts
@@ -62,6 +63,24 @@ const createCart = async (req, res) => {
   }
 };
 
+const removeCartItem = async(req, res)=>{
+  try {
+    const userId = req.user.id;
+    const productId = req.params.id;
+    const result = await Cart.findOneAndUpdate(
+      { userId },
+      { $pull: { products: { productId } } },
+      { new: true });
+    return res.status(200).json({result, "Matched" : 1, "Modified" : 1 });
+
+    
+  } catch (err) {
+    console.log(err?.message)
+    res.status(500).json(err?.message);
+  }
+
+}
+
 //update a cart
 const updateCart = async (req, res) => {
   try {
@@ -87,4 +106,4 @@ const deleteCart = async (req, res) => {
     res.status(500).json(err?.message);
   }
 };
-module.exports = { allCarts, singleCart, createCart, updateCart, deleteCart };
+module.exports = { allCarts, singleCart, createCart, updateCart, deleteCart, removeCartItem };

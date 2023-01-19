@@ -5,6 +5,7 @@ const {
   allCarts,
   deleteCart,
   singleCart,
+  removeCartItem,
 } = require('../controllers/cart');
 const {
   verifyToken,
@@ -19,8 +20,9 @@ router
   .get(verifyToken, allCarts);
 router
   .route('/:id')
+  .delete(verifyToken, removeCartItem)
   .get(verifyTokenAndAuthorization, singleCart)
   .put(verifyTokenAndAuthorization, updateCart)
-  .delete(verifyTokenAndAuthorization, deleteCart);
+  //.delete(verifyTokenAndAuthorization, deleteCart);
 
 module.exports = router;
