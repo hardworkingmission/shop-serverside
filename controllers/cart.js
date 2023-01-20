@@ -70,14 +70,31 @@ const removeCartItem = async(req, res)=>{
     const result = await Cart.findOneAndUpdate(
       { userId },
       { $pull: { products: { productId } } },
-      { new: true });
+      { new: true }
+    );
     return res.status(200).json({result, "Matched" : 1, "Modified" : 1 });
-
-    
+ 
   } catch (err) {
     console.log(err?.message)
     res.status(500).json(err?.message);
   }
+
+}
+
+const currentQuantity = async(req, res)=>{
+  try {
+    const userId = req.user.id;
+    const {productId} = req.body;
+    const cart = await Cart.findOneAndUpdate({userId},{}, {new: true});
+    const quantity = cart.products.find(product => product.productId == productId).quantity;
+    console.log({quantity})
+    return res.status(200).json(quantity);
+ 
+  } catch (err) {
+    console.log(err?.message)
+    res.status(500).json(err?.message);
+  }
+
 
 }
 
@@ -106,4 +123,4 @@ const deleteCart = async (req, res) => {
     res.status(500).json(err?.message);
   }
 };
-module.exports = { allCarts, singleCart, createCart, updateCart, deleteCart, removeCartItem };
+module.exports = { allCarts, singleCart, createCart, updateCart, deleteCart, removeCartItem, currentQuantity };

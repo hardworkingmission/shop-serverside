@@ -6,6 +6,7 @@ const {
   deleteCart,
   singleCart,
   removeCartItem,
+  currentQuantity
 } = require('../controllers/cart');
 const {
   verifyToken,
@@ -18,6 +19,9 @@ router
   .route('/')
   .post(verifyToken, createCart)
   .get(verifyToken, allCarts);
+router
+  .route('/current-cart-quantity')
+  .post(verifyToken, currentQuantity);
 router
   .route('/:id')
   .delete(verifyToken, removeCartItem)
